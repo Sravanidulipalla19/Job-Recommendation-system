@@ -59,8 +59,10 @@ for job in get_jobs_from_prefix(BUCKET_NAME, '2022/07/'):
 #############################
 # Model
 #############################
+st.set_page_config(layout="wide")
 
-st.title("Job Recommendation System")
+st.markdown("<h1 style='text-align: center;'>Job Recommendation System</h1>", unsafe_allow_html=True)
+# st.title("Job Recommendation System")
 
 # File uploader
 st.subheader("*Upload a resume PDF file*")
@@ -80,6 +82,10 @@ df['job_description'] = df['job_description'].apply(lambda x: x.lower())
 df['job_description'] = df['job_description'].apply(lambda x: re.sub('\w*\d\w*','', x))
 df['job_description'] = df['job_description'].apply(lambda x: re.sub('[%s]' % re.escape(string.punctuation), '', x))
 df['job_description'] = df['job_description'].apply(lambda x: re.sub(' +',' ',x))
+
+# Stop word removal
+stop_words = set(stopwords.words('english'))
+df['job_description'] = df['job_description'].apply(lambda x: ' '.join(w for w in word_tokenize(x) if not w.lower() in stop_words))
 
 if fl:
     with open(os.path.join(os.getcwd(),fl.name),"wb") as f:
@@ -117,7 +123,81 @@ if fl:
 
     st.subheader("*Jobs related to the resume*")
     
-    st.write(df.iloc[dist_dict_sort[0:10]])
+    res = df.iloc[dist_dict_sort[0:10]]
+    res = res[['company_name','role','location','url']]
+    res = res.reset_index(drop=True)
+    # st.write(res)
+
+    # st.write(df.iloc[dist_dict_sort[0:10]])
+
+    # for i in range(10):
+        # st.write('Role:', res.iloc[i,2], ', Location:',res.iloc[i,3], ', URL:',res.iloc[i,5])
+    
+    res['url'] = res['url'].apply(lambda x:  f'<a target="_blank" href="{x}">Job URL</a>')
+
+    col1, col2, col3, col4, col5 = st.columns(5)
+
+    with col1:
+        st.markdown("<h2 style='text-align: center;'>No</h2>", unsafe_allow_html=True)
+        # for i in range(10):
+        st.markdown("<h5 style='text-align: center;'>1</h5>", unsafe_allow_html=True)
+        st.write("")
+        st.markdown("<h5 style='text-align: center;'>2</h5>", unsafe_allow_html=True)
+        st.write("")
+        st.markdown("<h5 style='text-align: center;'>3</h5>", unsafe_allow_html=True)
+        st.write("")
+        st.markdown("<h5 style='text-align: center;'>4</h5>", unsafe_allow_html=True)
+        st.write("")
+        st.markdown("<h5 style='text-align: center;'>5</h5>", unsafe_allow_html=True)
+        st.write("")
+        st.markdown("<h5 style='text-align: center;'>6</h5>", unsafe_allow_html=True)
+        st.write("")
+        st.markdown("<h5 style='text-align: center;'>7</h5>", unsafe_allow_html=True)
+        st.write("")
+        st.markdown("<h5 style='text-align: center;'>8</h5>", unsafe_allow_html=True)
+        st.write("")
+        st.markdown("<h5 style='text-align: center;'>9</h5>", unsafe_allow_html=True)
+        st.write("")
+        st.markdown("<h5 style='text-align: center;'>10</h5>", unsafe_allow_html=True)
+        # st.write(str(i))
+
+    with col2:
+        st.header("Company")
+        for i in range(10):
+            st.write(res.iloc[i,0])
+            st.write("")
+
+    with col3:
+        st.header("Role")
+        for i in range(10):
+            st.write(res.iloc[i,1])
+            st.write("")
+
+    with col4:
+        st.header("Location")
+        for i in range(10):
+            st.write(res.iloc[i,2])
+            st.write("")       
+
+    with col5:
+        st.header("URL")
+        for i in range(10):
+            st.markdown(res.iloc[i,3],unsafe_allow_html=True)
+            st.write("")
+            # st.write(f" [Job URL]({res.iloc[i,3]})")
+            # st.write(res.iloc[i,3])
+    
+
+
+    # for i in range(10):
+        # f'<a target="_blank" href="{link1}">Hyperlink in Streamlit dataframe</a>'
+        # j = f'<a target="_blank" href="{res.iloc[i,3]}">Hyperlink in Streamlit dataframe</a>'
+        # st.write(j.to_html(escape=False, index=False), unsafe_allow_html=True)
+       
+    # st.table(res)
+    
+    # st.write(res.to_html(escape=False, index=False), unsafe_allow_html=True)     
+
 
 #############################
 # EDA
