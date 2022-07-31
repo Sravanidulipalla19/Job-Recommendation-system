@@ -6,8 +6,9 @@ This project aim to build a job recommendation system to recommend users jobs on
 Filter the keyword in the resume —> skills set, work experience, address, major
 ### 2. Web Scrapping Application
 Collect the jobs recently listed on job boards and store them to cloud data lake (AWS S3) for further use.
-### 3. Alogrithm
-Create an algorithm that can provide a recommended job list base on how well the resume keywords match the job description
+### 3. Model
+Create a Model that can provide a recommended job list base on how well the resume keywords match the job description
 ### 4. Dashboard
 Design a dashboard for user to interact (upload resume, links that take users to the application page for the job on the recommended list)
+
 Data Source: LinkedIn, Indeed
